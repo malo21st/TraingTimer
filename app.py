@@ -142,7 +142,7 @@ main_msg = st.empty()
 start_btn = st.empty()
 
 ### Start
-main_msg.markdown("<h1 style='color: lightblue;'>運動しましょう</h1>",
+main_msg.markdown("<h1 style='color: lightblue;'>運動しましょう</h1><br><br>",
                   unsafe_allow_html=True)
 
 if start_btn.button("スタート"):
