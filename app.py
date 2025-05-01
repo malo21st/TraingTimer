@@ -6,59 +6,59 @@ plan_data = [
 {
     "name": "かかと",
     "sets": 10,
-    "count_down": 5,
+    "start_count": 5,
     "plan": [
         {
             "text": "かかと上げて！",
             "time": 1,
-            "visibility": False,
+            "count": 0,
         },
         {
             "text": "キープ！",
             "time": 3,
-            "visibility": True,
+            "count": -1,
         },
         {
             "text": "下げて",
             "time": 1,
-            "visibility": False,
+            "count": 0,
         },
     ],
 },
 {
     "name": "かたあし",
     "sets": 5,
-    "count_down": 5,
+    "start_count": 5,
     "plan": [
         {
             "text": "右足上げて！",
             "time": 1,
-            "visibility": False,
+            "count": 0,
         },
         {
             "text": "キープ！",
             "time": 60,
-            "visibility": True,
+            "count": -1,
         },
         {
             "text": "下げて",
             "time": 1,
-            "visibility": False,
+            "count": 0,
         },
         {
             "text": "左足上げて！",
             "time": 1,
-            "visibility": False,
+            "count": 0,
         },
         {
             "text": "キープ！",
             "time": 60,
-            "visibility": True,
+            "count": -1,
         },
         {
             "text": "下げて",
             "time": 1,
-            "visibility": False,
+            "count": 0,
         },
     ],
 }
@@ -68,13 +68,16 @@ def make_plan(plan_dic):
     plan = []
     for training in plan_dic:
         name = training["name"]      
-        for num in range(training["count_down"], -1, -1):
+        for num in range(training["start_count"], -1, -1):
             plan.append(["カウントダウン", num, 0, name])
         for sets_num in range(1, training["sets"]+1):
             for p in training["plan"]:
                 for count in range(p["time"]+1):
-                    if p["visibility"]:
+                    if p["count"] == 1:
                         plan.append([p["text"], count, sets_num, name])
+                    elif p["count"] == -1:
+                        start_count = p["time"]
+                        plan.append([p["text"], start_count - count, sets_num, name])
                     else:
                         plan.append([p["text"], "　", sets_num, name])
     return plan
