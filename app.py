@@ -3,7 +3,10 @@ import time
 import string
 import ast
 
-# Setting
+# Initialize & Setting
+
+if "started" not in st.session_state:
+    st.session_state.started = False
 
 ## かかと上げ下ろし
 SETS_0_DEF = 10
@@ -120,41 +123,47 @@ with st.sidebar:
     training_0 = st.checkbox("**かかと上げ下ろし**", value=True)
     sets_num_0 = st.number_input(f"セット数（回）[ {SETS_0_MIN}~{SETS_0_MAX} ]",
                                  min_value=SETS_0_MIN, max_value=SETS_0_MAX, value=SETS_0_DEF,
-                                 step=SETS_STEP_0, key=0)
+                                 step=SETS_STEP_0)
     time_num_0 = st.number_input(f"キープ時間（秒） [ {TIME_0_MIN}~{TIME_0_MAX} ]",
                                  min_value=TIME_0_MIN, max_value=TIME_0_MAX, value=TIME_0_DEF,
-                                 step=TIME_STEP_0, key=1)
+                                 step=TIME_STEP_0)
     st.write("")
     training_1 = st.checkbox("**片足立ち**", value=True)
     sets_num_1 = st.number_input(f"セット数（回） [ {SETS_1_MIN}~{SETS_1_MAX} ]",
                                  min_value=SETS_1_MIN, max_value=SETS_1_MAX, value=SETS_1_DEF,
-                                 step=SETS_STEP_1, key=2)
+                                 step=SETS_STEP_1)
     time_num_1 = st.number_input(f"キープ時間（秒） [ {TIME_1_MIN}~{TIME_1_MAX} ]",
                                  min_value=TIME_1_MIN, max_value=TIME_1_MAX, value=TIME_1_DEF,
-                                 step=TIME_STEP_1, key=3)
-    st.markdown("---")
-    if "started" not in st.session_state:
-        st.session_state.started = False
-    if st.button("スタート"):
-        st.session_state.started = True
+                                 step=TIME_STEP_1)
 
-        training_plan = [] # トレーニング計画（JSON風）
-        if training_0: # かかと上げ下ろし
-            training_plan.append(ast.literal_eval(
-                tmpl_0.substitute(sets_num=sets_num_0, time_num=time_num_0)
-            ))
-        if training_1: # 片足立ち
-            training_plan.append(ast.literal_eval(
-                tmpl_1.substitute(sets_num=sets_num_1, time_num=time_num_1)
-            )) 
-        training_list = make_plan(training_plan) # １秒毎の指示リストを作成
-
-# Main
+## Main
+### Layout
 main_msg = st.empty()
+start_btn = st.empty()
+
+### Start
 main_msg.markdown("<h1 style='color: lightblue;'>運動しましょう</h1>",
                   unsafe_allow_html=True)
+
+if start_btn.button("スタート"):
+    st.session_state.started = True
+
+### Operation
 if st.session_state.started:
+    # トレーニング計画
+    training_plan = [] # トレーニング計画（JSON風）
+    if training_0: # かかと上げ下ろし
+        training_plan.append(ast.literal_eval(
+            tmpl_0.substitute(sets_num=sets_num_0, time_num=time_num_0)
+        ))
+    if training_1: # 片足立ち
+        training_plan.append(ast.literal_eval(
+            tmpl_1.substitute(sets_num=sets_num_1, time_num=time_num_1)
+        )) 
+    training_list = make_plan(training_plan) # １秒毎の指示リストを作成
+    # トレーニング開始
     st.session_state.started = False
+    start_btn.empty()
     for training in training_list: # １秒毎の指示リストに従い表示
         text, count, sets, name = training
         main_msg.markdown(
