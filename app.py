@@ -85,7 +85,6 @@ def make_plan(plan_dic):
 plan = make_plan(plan_data)
 
 # Streamlit
-## View
 if "started" not in st.session_state:
     st.session_state.started = False
 if st.button("スタート"):
@@ -93,7 +92,6 @@ if st.button("スタート"):
 
 main_msg = st.empty()
 
-## Logic
 counter = 0
 if st.session_state.started:
     end_msg = st.empty()
