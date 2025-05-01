@@ -85,6 +85,14 @@ temp_1 = string.Template("""
 }
 """)
 
+temp_msg = string.Template("""
+            <h1 style='color: red;'>${text}</h1>
+            <div style='text-align: center;'>
+                <span style='font-size: 72px; color: lightgreen;'>${count}</span>
+            </div>
+            <h1 style='color: lightblue;'>${name}　${sets}</h1>
+""")
+
 def make_plan(plan_dic):
     plan = []
     for training in plan_dic:
@@ -101,13 +109,13 @@ def make_plan(plan_dic):
                         plan.append([p["text"], start_count - count, sets_num, name])
                     else:
                         plan.append([p["text"], "　", sets_num, name])
+    plan.append(["　", "　", "", "お疲れさまでした"])
     return plan
 
 # Streamlit
 ## Sidebar
-plan = []
 with st.sidebar:
-    st.write("**かかと上げ下ろし**")
+    training_0 = st.checkbox("**かかと上げ下ろし**", value=True)
     sets_num_0 = st.number_input(f"セット数（回）[ {SETS_0_MIN}~{SETS_0_MAX} ]",
                                  min_value=SETS_0_MIN, max_value=SETS_0_MAX, value=SETS_0_DEF,
                                  step=SETS_STEP_0, key=0)
@@ -115,42 +123,39 @@ with st.sidebar:
                                  min_value=TIME_0_MIN, max_value=TIME_0_MAX, value=TIME_0_DEF,
                                  step=TIME_STEP_0, key=1)
     st.write("")
-    st.write("**片足立ち**")
+    training_1 = st.checkbox("**片足立ち**", value=True)
     sets_num_1 = st.number_input(f"セット数（回） [ {SETS_1_MIN}~{SETS_1_MAX} ]",
                                  min_value=SETS_1_MIN, max_value=SETS_1_MAX, value=SETS_1_DEF,
                                  step=SETS_STEP_1, key=2)
     time_num_1 = st.number_input(f"キープ時間（秒） [ {TIME_1_MIN}~{TIME_1_MAX} ]",
                                  min_value=TIME_1_MIN, max_value=TIME_1_MAX, value=TIME_1_DEF,
                                  step=TIME_STEP_1, key=3)
-
+    st.markdown("---")
     if "started" not in st.session_state:
         st.session_state.started = False
     if st.button("スタート"):
         st.session_state.started = True
 
-        plan_data = [
-            ast.literal_eval(temp_0.substitute(sets_num=sets_num_0, time_num=time_num_0)),
-            ast.literal_eval(temp_1.substitute(sets_num=sets_num_1, time_num=time_num_1))
-        ]
-        plan = make_plan(plan_data)
+        training_plan = [] # トレーニング計画（JSON風）
+        if training_0: # かかと上げ下ろし
+            training_plan.append(ast.literal_eval(
+                temp_0.substitute(sets_num=sets_num_0, time_num=time_num_0)
+            ))
+        if training_1: # 片足立ち
+            training_plan.append(ast.literal_eval(
+                temp_1.substitute(sets_num=sets_num_1, time_num=time_num_1)
+            )) 
+        training_list = make_plan(training_plan) # １秒毎の指示リストを作成
 
 # Main
 main_msg = st.empty()
 
 if st.session_state.started:
-    end_msg = st.empty()
-    for counter in range(len(plan)):
-        text, count, sets, name = plan[counter]
+    for training in training_list: # １秒毎の指示リストに従い表示
+        text, count, sets, name = training
         main_msg.markdown(
-            f"""
-            <h1 style='color: red;'>{text}</h1>
-            <div style='text-align: center;'>
-                <span style='font-size: 72px; color: lightgreen;'>{count}</span>
-            </div>
-            <h1 style='color: lightblue;'>{name}　{sets}</h1>
-            """,
+            temp_msg.substitute(text=text, count=count, sets=sets, name=name),
             unsafe_allow_html=True
         )
         time.sleep(1)
-    end_msg.markdown(f"<h1>お疲れさまでした</h1>", unsafe_allow_html=True)
     st.session_state.started = False
