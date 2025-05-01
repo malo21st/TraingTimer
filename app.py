@@ -137,7 +137,6 @@ with st.sidebar:
 # Main
 main_msg = st.empty()
 
-counter = 0
 if st.session_state.started:
     end_msg = st.empty()
     for counter in range(len(plan)):
@@ -153,6 +152,5 @@ if st.session_state.started:
             unsafe_allow_html=True
         )
         time.sleep(1)
-        counter += 1
     end_msg.markdown(f"<h1>お疲れさまでした</h1>", unsafe_allow_html=True)
     st.session_state.started = False
