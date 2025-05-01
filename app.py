@@ -121,7 +121,7 @@ with st.sidebar:
                                  step=SETS_STEP_1, key=2)
     time_num_1 = st.number_input(f"キープ時間（秒） [ {TIME_1_MIN}~{TIME_1_MAX} ]",
                                  min_value=TIME_1_MIN, max_value=TIME_1_MAX, value=TIME_1_DEF,
-                                 step=SETS_STEP_1, key=3)
+                                 step=TIME_STEP_1, key=3)
 
     if "started" not in st.session_state:
         st.session_state.started = False
