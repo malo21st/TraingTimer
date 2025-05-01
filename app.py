@@ -1,11 +1,29 @@
 import streamlit as st
 import time
+import string
+import ast
+
+# Default settings
+
+## かかと上げ下ろし
+SETS_0_DEF = 10
+TIME_0_DEF = 5
+SETS_0_MIN, SETS_0_MAX = 5, 50
+TIME_0_MIN, TIME_0_MAX = 5, 60
+SETS_STEP_0, TIME_STEP_0 = 5, 5
+
+## 片足立ち
+SETS_1_DEF = 5
+TIME_1_DEF = 60
+SETS_1_MIN, SETS_1_MAX = 5, 50
+TIME_1_MIN, TIME_1_MAX = 30, 180
+SETS_STEP_1, TIME_STEP_1 = 5, 30
 
 # Data
-plan_data = [
+temp_0 = string.Template("""
 {
     "name": "かかと",
-    "sets": 10,
+    "sets": ${sets_num},
     "start_count": 5,
     "plan": [
         {
@@ -15,7 +33,7 @@ plan_data = [
         },
         {
             "text": "キープ！",
-            "time": 3,
+            "time": ${time_num},
             "count": -1,
         },
         {
@@ -24,10 +42,13 @@ plan_data = [
             "count": 0,
         },
     ],
-},
+}
+""")
+
+temp_1 = string.Template("""
 {
     "name": "かたあし",
-    "sets": 5,
+    "sets": ${sets_num},
     "start_count": 5,
     "plan": [
         {
@@ -37,7 +58,7 @@ plan_data = [
         },
         {
             "text": "キープ！",
-            "time": 60,
+            "time": ${time_num},
             "count": -1,
         },
         {
@@ -52,7 +73,7 @@ plan_data = [
         },
         {
             "text": "キープ！",
-            "time": 60,
+            "time": ${time_num},
             "count": -1,
         },
         {
@@ -62,7 +83,7 @@ plan_data = [
         },
     ],
 }
-]
+""")
 
 def make_plan(plan_dic):
     plan = []
@@ -82,14 +103,38 @@ def make_plan(plan_dic):
                         plan.append([p["text"], "　", sets_num, name])
     return plan
 
-plan = make_plan(plan_data)
-
 # Streamlit
-if "started" not in st.session_state:
-    st.session_state.started = False
-if st.button("スタート"):
-    st.session_state.started = True
+## Sidebar
+plan = []
+with st.sidebar:
+    st.write("**かかと上げ下ろし**")
+    sets_num_0 = st.number_input(f"セット数（回）[ {SETS_0_MIN}~{SETS_0_MAX} ]",
+                                 min_value=SETS_0_MIN, max_value=SETS_0_MAX, value=SETS_0_DEF,
+                                 step=SETS_STEP_0, key=0)
+    time_num_0 = st.number_input(f"キープ時間（秒） [ {TIME_0_MIN}~{TIME_0_MAX} ]",
+                                 min_value=TIME_0_MIN, max_value=TIME_0_MAX, value=TIME_0_DEF,
+                                 step=TIME_STEP_0, key=1)
+    st.write("")
+    st.write("**片足立ち**")
+    sets_num_1 = st.number_input(f"セット数（回） [ {SETS_1_MIN}~{SETS_1_MAX} ]",
+                                 min_value=SETS_1_MIN, max_value=SETS_1_MAX, value=SETS_1_DEF,
+                                 step=SETS_STEP_1, key=2)
+    time_num_1 = st.number_input(f"キープ時間（秒） [ {TIME_1_MIN}~{TIME_1_MAX} ]",
+                                 min_value=TIME_1_MIN, max_value=TIME_1_MAX, value=TIME_1_DEF,
+                                 step=SETS_STEP_1, key=3)
 
+    if "started" not in st.session_state:
+        st.session_state.started = False
+    if st.button("スタート"):
+        st.session_state.started = True
+
+        plan_data = [
+            ast.literal_eval(temp_0.substitute(sets_num=sets_num_0, time_num=time_num_0)),
+            ast.literal_eval(temp_1.substitute(sets_num=sets_num_1, time_num=time_num_1))
+        ]
+        plan = make_plan(plan_data)
+
+# Main
 main_msg = st.empty()
 
 counter = 0
