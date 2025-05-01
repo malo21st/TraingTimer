@@ -90,7 +90,7 @@ def make_plan(plan_dic):
     for training in plan_dic:
         name = training["name"]      
         for num in range(training["start_count"], -1, -1):
-            plan.append(["カウントダウン", num, 0, name])
+            plan.append(["運動開始まで", num, 0, name])
         for sets_num in range(1, training["sets"]+1):
             for p in training["plan"]:
                 for count in range(p["time"]+1):
