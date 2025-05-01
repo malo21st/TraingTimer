@@ -3,7 +3,7 @@ import time
 import string
 import ast
 
-# Default settings
+# Setting
 
 ## かかと上げ下ろし
 SETS_0_DEF = 10
@@ -19,8 +19,8 @@ SETS_1_MIN, SETS_1_MAX = 5, 50
 TIME_1_MIN, TIME_1_MAX = 30, 180
 SETS_STEP_1, TIME_STEP_1 = 5, 30
 
-# Data
-temp_0 = string.Template("""
+## Template
+tmpl_0 = string.Template("""
 {
     "name": "かかと",
     "sets": ${sets_num},
@@ -45,7 +45,7 @@ temp_0 = string.Template("""
 }
 """)
 
-temp_1 = string.Template("""
+tmpl_1 = string.Template("""
 {
     "name": "かたあし",
     "sets": ${sets_num},
@@ -85,7 +85,7 @@ temp_1 = string.Template("""
 }
 """)
 
-temp_msg = string.Template("""
+tmpl_msg = string.Template("""
             <h1 style='color: red;'>${text}</h1>
             <div style='text-align: center;'>
                 <span style='font-size: 72px; color: lightgreen;'>${count}</span>
@@ -93,24 +93,26 @@ temp_msg = string.Template("""
             <h1 style='color: lightblue;'>${name}　${sets}</h1>
 """)
 
-def make_plan(plan_dic):
-    plan = []
-    for training in plan_dic:
+# Function
+# トレーニング計画を作成する関数
+def make_plan(training_plan):
+    plan_lst = []
+    for training in training_plan:
         name = training["name"]      
         for num in range(training["start_count"], -1, -1):
-            plan.append(["運動開始まで", num, 0, name])
+            plan_lst.append(["運動開始まで", num, 0, name])
         for sets_num in range(1, training["sets"]+1):
             for p in training["plan"]:
                 for count in range(p["time"]+1):
                     if p["count"] == 1:
-                        plan.append([p["text"], count, sets_num, name])
+                        plan_lst.append([p["text"], count, sets_num, name])
                     elif p["count"] == -1:
                         start_count = p["time"]
-                        plan.append([p["text"], start_count - count, sets_num, name])
+                        plan_lst.append([p["text"], start_count - count, sets_num, name])
                     else:
-                        plan.append([p["text"], "　", sets_num, name])
-    plan.append(["　", "　", "", "お疲れさまでした"])
-    return plan
+                        plan_lst.append([p["text"], "　", sets_num, name])
+    plan_lst.append(["　", "　", "", "お疲れさまでした"])
+    return plan_lst
 
 # Streamlit
 ## Sidebar
@@ -139,23 +141,24 @@ with st.sidebar:
         training_plan = [] # トレーニング計画（JSON風）
         if training_0: # かかと上げ下ろし
             training_plan.append(ast.literal_eval(
-                temp_0.substitute(sets_num=sets_num_0, time_num=time_num_0)
+                tmpl_0.substitute(sets_num=sets_num_0, time_num=time_num_0)
             ))
         if training_1: # 片足立ち
             training_plan.append(ast.literal_eval(
-                temp_1.substitute(sets_num=sets_num_1, time_num=time_num_1)
+                tmpl_1.substitute(sets_num=sets_num_1, time_num=time_num_1)
             )) 
         training_list = make_plan(training_plan) # １秒毎の指示リストを作成
 
 # Main
 main_msg = st.empty()
-
+main_msg.markdown("<h1 style='color: lightblue;'>運動しましょう</h1>",
+                  unsafe_allow_html=True)
 if st.session_state.started:
+    st.session_state.started = False
     for training in training_list: # １秒毎の指示リストに従い表示
         text, count, sets, name = training
         main_msg.markdown(
-            temp_msg.substitute(text=text, count=count, sets=sets, name=name),
+            tmpl_msg.substitute(text=text, count=count, sets=sets, name=name),
             unsafe_allow_html=True
         )
         time.sleep(1)
-    st.session_state.started = False
