@@ -53,20 +53,24 @@ def make_exercise_list(training_plan):
 ## Sidebar
 with st.sidebar:
     training_0 = st.checkbox(f"**{EX_NAME_0}**", value=True)
-    sets_num_0 = st.number_input(f"セット数（回）[ {SETS_0_MIN} ~ {SETS_0_MAX} ]",
-                                 min_value=SETS_0_MIN, max_value=SETS_0_MAX, value=SETS_0_DEF,
-                                 step=SETS_STEP_0)
-    time_num_0 = st.number_input(f"キープ時間（秒） [ {TIME_0_MIN} ~ {TIME_0_MAX} ]",
-                                 min_value=TIME_0_MIN, max_value=TIME_0_MAX, value=TIME_0_DEF,
-                                 step=TIME_STEP_0)
+    with st.expander("運動強度の変更", expanded=False):
+        sets_num_0 = st.number_input(f"セット数（回）[ {SETS_0_MIN} ~ {SETS_0_MAX} ]",
+                                    min_value=SETS_0_MIN, max_value=SETS_0_MAX, value=SETS_0_DEF,
+                                    step=SETS_STEP_0)
+        time_num_0 = st.number_input(f"キープ時間（秒） [ {TIME_0_MIN} ~ {TIME_0_MAX} ]",
+                                    min_value=TIME_0_MIN, max_value=TIME_0_MAX, value=TIME_0_DEF,
+                                    step=TIME_STEP_0)
     st.write("")
     training_1 = st.checkbox(f"**{EX_NAME_1}**", value=True)
-    sets_num_1 = st.number_input(f"セット数（回） [ {SETS_1_MIN} ~ {SETS_1_MAX} ]",
-                                 min_value=SETS_1_MIN, max_value=SETS_1_MAX, value=SETS_1_DEF,
-                                 step=SETS_STEP_1)
-    time_num_1 = st.number_input(f"キープ時間（秒） [ {TIME_1_MIN} ~ {TIME_1_MAX} ]",
-                                 min_value=TIME_1_MIN, max_value=TIME_1_MAX, value=TIME_1_DEF,
-                                 step=TIME_STEP_1)
+    with st.expander("運動強度の変更", expanded=False):
+        sets_num_1 = st.number_input(f"セット数（回） [ {SETS_1_MIN} ~ {SETS_1_MAX} ]",
+                                    min_value=SETS_1_MIN, max_value=SETS_1_MAX, value=SETS_1_DEF,
+                                    step=SETS_STEP_1)
+        time_num_1 = st.number_input(f"キープ時間（秒） [ {TIME_1_MIN} ~ {TIME_1_MAX} ]",
+                                    min_value=TIME_1_MIN, max_value=TIME_1_MAX, value=TIME_1_DEF,
+                                    step=TIME_STEP_1)
+    st.markdown("---")
+    st.button("やりなおし", key="reset", on_click=lambda: st.session_state.clear())
 
 ## Main
 ### Layout
@@ -76,7 +80,7 @@ main_btn = st.empty()
 ### Start
 main_msg.markdown("<h1 style='color: lightblue;'>運動しましょう</h1><br><br>",
                   unsafe_allow_html=True)
-if main_btn.button("スタート"):
+if main_btn.button("**はじめる**"):
     st.session_state.started = True
 
 ### Operation
