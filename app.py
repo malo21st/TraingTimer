@@ -139,13 +139,13 @@ with st.sidebar:
 ## Main
 ### Layout
 main_msg = st.empty()
-start_btn = st.empty()
+main_btn = st.empty()
 
 ### Start
 main_msg.markdown("<h1 style='color: lightblue;'>運動しましょう</h1><br><br>",
                   unsafe_allow_html=True)
 
-if start_btn.button("スタート"):
+if main_btn.button("スタート"):
     st.session_state.started = True
 
 ### Operation
@@ -163,7 +163,7 @@ if st.session_state.started:
     training_list = make_plan(training_plan) # １秒毎の指示リストを作成
     # トレーニング開始
     st.session_state.started = False
-    start_btn.empty()
+    main_btn.empty()
     for training in training_list: # １秒毎の指示リストに従い表示
         text, count, sets, name = training
         main_msg.markdown(
