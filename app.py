@@ -1,35 +1,21 @@
 import streamlit as st
 import time
 import ast
-import ex_template
+import ex_data
 
 # Initialize & Setting
 ## Session State
 if "started" not in st.session_state:
     st.session_state.started = False
-## Exercise 0
-EX_NAME_0 = "かかと上げ下ろし"
-SETS_0_DEF, TIME_0_DEF = 10, 5
-SETS_0_MIN, SETS_0_MAX = 5, 50
-TIME_0_MIN, TIME_0_MAX = 5, 60
-SETS_STEP_0, TIME_STEP_0 = 5, 5
-## Exercise 1
-EX_NAME_1 = "片足立ち"
-SETS_1_DEF, TIME_1_DEF = 5, 60
-SETS_1_MIN, SETS_1_MAX = 5, 50
-TIME_1_MIN, TIME_1_MAX = 30, 180
-SETS_STEP_1, TIME_STEP_1 = 5, 30
+## load ex_data
+ex_data_list = ex_data.ex_data_list
 ## Template
-tmpl_ex0 = ex_template.tmpl_ex0
-tmpl_ex1 = ex_template.tmpl_ex1
-tmpl_msg = ex_template.tmpl_msg
+tmpl_msg = ex_data.tmpl_msg
 
 # Function
 def make_exercise_list(training_plan):
     """
-    トレーニング計画を元に「トレーニング指示リスト」を作成する関数
-    :param training_plan: トレーニング計画（JSON風）
-    :return: トレーニング指示リスト
+    「トレーニング計画」を元に「トレーニング指示リスト」を作成
     """
     ex_lst = []
     for training in training_plan:
@@ -52,25 +38,21 @@ def make_exercise_list(training_plan):
 # Streamlit
 ## Sidebar
 with st.sidebar:
-    training_0 = st.checkbox(f"**{EX_NAME_0}**", value=True)
-    with st.expander("運動強度の変更", expanded=False):
-        sets_num_0 = st.number_input(f"セット数（回）[ {SETS_0_MIN} ~ {SETS_0_MAX} ]",
-                                    min_value=SETS_0_MIN, max_value=SETS_0_MAX, value=SETS_0_DEF,
-                                    step=SETS_STEP_0)
-        time_num_0 = st.number_input(f"キープ時間（秒） [ {TIME_0_MIN} ~ {TIME_0_MAX} ]",
-                                    min_value=TIME_0_MIN, max_value=TIME_0_MAX, value=TIME_0_DEF,
-                                    step=TIME_STEP_0)
-    st.write("")
-    training_1 = st.checkbox(f"**{EX_NAME_1}**", value=True)
-    with st.expander("運動強度の変更", expanded=False):
-        sets_num_1 = st.number_input(f"セット数（回） [ {SETS_1_MIN} ~ {SETS_1_MAX} ]",
-                                    min_value=SETS_1_MIN, max_value=SETS_1_MAX, value=SETS_1_DEF,
-                                    step=SETS_STEP_1)
-        time_num_1 = st.number_input(f"キープ時間（秒） [ {TIME_1_MIN} ~ {TIME_1_MAX} ]",
-                                    min_value=TIME_1_MIN, max_value=TIME_1_MAX, value=TIME_1_DEF,
-                                    step=TIME_STEP_1)
+    params_lst = list()
+    for ex in ex_data_list:
+        ui = ex["ui"]
+        will_exercise = st.checkbox(f"**{ui['name']}**", value=True)
+        with st.expander("運動強度の変更", expanded=False):
+            sets_num = st.number_input(f"セット数（回）[ {ui['sets_min']} ~ {ui['sets_max']} ]",
+                                        min_value=ui['sets_min'], max_value=ui['sets_max'], value=ui['sets_def'],
+                                        step=ui['sets_step'], key=ui["name"]+"_sets")
+            keep_num = st.number_input(f"キープ時間（秒） [ {ui['keep_min']} ~ {ui['keep_max']} ]",
+                                        min_value=ui['keep_min'], max_value=ui['keep_max'], value=ui['keep_def'],
+                                        step=ui['keep_step'], key=ui["name"]+"_keep")
+        params_lst.append({"will_exercise": will_exercise, "sets": sets_num, "keep": keep_num})
+        st.write("")
     st.markdown("---")
-    st.button("やりなおし", key="reset", on_click=lambda: st.session_state.clear())
+    st.button("やりなおし", key="again", on_click=lambda: st.session_state.clear())
 
 ## Main
 ### Layout
@@ -87,14 +69,11 @@ if main_btn.button("**はじめる**"):
 if st.session_state.started:
     # トレーニング計画
     training_plan = [] # トレーニング計画（JSON風）
-    if training_0: # かかと上げ下ろし
-        training_plan.append(ast.literal_eval(
-            tmpl_ex0.substitute(sets_num=sets_num_0, time_num=time_num_0)
-        ))
-    if training_1: # 片足立ち
-        training_plan.append(ast.literal_eval(
-            tmpl_ex1.substitute(sets_num=sets_num_1, time_num=time_num_1)
-        ))
+    for prm, ex in zip(params_lst, ex_data_list):
+        if prm["will_exercise"]:
+            training_plan.append(ast.literal_eval(
+                ex["template"].substitute(sets_num=prm["sets"], keep_num=prm["keep"])
+            ))
     exercise_list = make_exercise_list(training_plan) # 「トレーニング指示リスト」作成
 
     # トレーニング開始
