@@ -92,7 +92,7 @@ if st.session_state.started:
         img_path = f"static/{image}"
         if image:
             img = Image.open(img_path)
-            main_img.image(img, caption=name, width=150)
+            main_img.image(img, width=150)
         else:
             main_img.empty() # 画像を消す
 
