@@ -76,7 +76,7 @@ _tmpl_ex2 = string.Template("""
     "plan": [
         {
             "text": "腰をゆっくり下げて！",
-            "time": 2,
+            "time": 3,
             "count": 0,
         },
         {
@@ -86,7 +86,7 @@ _tmpl_ex2 = string.Template("""
         },
         {
             "text": "ゆっくり上げて",
-            "time": 2,
+            "time": 3,
             "count": 0,
         },
     ],
@@ -122,8 +122,8 @@ _ui_ex1 = {
 
 _ui_ex2 = {
     "name": "スクワット",
-    "available": False,
-    "sets_def": 10,
+    "available": True,
+    "sets_def": 20,
     "sets_min": 5,
     "sets_max": 50,
     "sets_step": 5,
