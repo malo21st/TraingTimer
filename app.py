@@ -2,37 +2,37 @@ import streamlit as st
 import time
 import ast
 import ex_data
+from PIL import Image
 
 # Initialize & Setting
 ## Session State
 if "started" not in st.session_state:
     st.session_state.started = False
-## load ex_data
+## Excercise Data & Template
 ex_data_list = ex_data.ex_data_list
-## Template
 tmpl_msg = ex_data.tmpl_msg
 
 # Function
-def make_exercise_list(training_plan):
+def make_exercise_list(training_plan, image_list):
     """
     「トレーニング計画」を元に「トレーニング指示リスト」を作成
     """
     ex_lst = []
-    for training in training_plan:
+    for training, image in zip(training_plan, image_list):
         name = training["name"]      
         for num in range(training["start_count"], -1, -1):
-            ex_lst.append(["運動開始まで", num, 0, name])
+            ex_lst.append(["運動開始まで", num, 0, name, image])
         for sets_num in range(1, training["sets"]+1):
             for p in training["plan"]:
                 for count in range(p["time"]+1):
                     if p["count"] == 1:
-                        ex_lst.append([p["text"], count, sets_num, name])
+                        ex_lst.append([p["text"], count, sets_num, name, image])
                     elif p["count"] == -1:
                         start_count = p["time"]
-                        ex_lst.append([p["text"], start_count - count, sets_num, name])
+                        ex_lst.append([p["text"], start_count - count, sets_num, name, image])
                     else:
-                        ex_lst.append([p["text"], "　", sets_num, name])
-    ex_lst.append(["　", "　", "", "お疲れさまでした"])
+                        ex_lst.append([p["text"], "　", sets_num, name, image])
+    ex_lst.append(["　", "　", "", "お疲れさまでした", ""])
     return ex_lst
 
 # Streamlit
@@ -41,14 +41,14 @@ with st.sidebar:
     params_lst = list()
     for ex in ex_data_list:
         ui = ex["ui"]
-        will_exercise = st.checkbox(f"**{ui['name']}**", value=True)
+        will_exercise = st.checkbox(f"**{ui['name']}**", value=ui["available"], key=ui["name"])
         with st.expander("運動強度の変更", expanded=False):
             sets_num = st.number_input(f"セット数（回）[ {ui['sets_min']} ~ {ui['sets_max']} ]",
                                         min_value=ui['sets_min'], max_value=ui['sets_max'], value=ui['sets_def'],
-                                        step=ui['sets_step'], key=ui["name"]+"_sets")
+                                        step=ui['sets_step'], key=f"{ui['name']}_sets")
             keep_num = st.number_input(f"キープ時間（秒） [ {ui['keep_min']} ~ {ui['keep_max']} ]",
                                         min_value=ui['keep_min'], max_value=ui['keep_max'], value=ui['keep_def'],
-                                        step=ui['keep_step'], key=ui["name"]+"_keep")
+                                        step=ui['keep_step'], key=f"{ui['name']}_keep")
         params_lst.append({"will_exercise": will_exercise, "sets": sets_num, "keep": keep_num})
         st.write("")
     st.markdown("---")
@@ -58,31 +58,42 @@ with st.sidebar:
 ### Layout
 main_msg = st.empty()
 main_btn = st.empty()
+main_img = st.empty()
 
 ### Start
 main_msg.markdown("<h1 style='color: lightblue;'>運動しましょう</h1><br><br>",
                   unsafe_allow_html=True)
 if main_btn.button("**はじめる**"):
     st.session_state.started = True
+main_img.empty() # 画像を消す
 
 ### Operation
 if st.session_state.started:
     # トレーニング計画
     training_plan = [] # トレーニング計画（JSON風）
+    image_list = [] # 画像リスト
     for prm, ex in zip(params_lst, ex_data_list):
         if prm["will_exercise"]:
             training_plan.append(ast.literal_eval(
                 ex["template"].substitute(sets_num=prm["sets"], keep_num=prm["keep"])
             ))
-    exercise_list = make_exercise_list(training_plan) # 「トレーニング指示リスト」作成
+            image_list.append(ex["ui"].get("image", False))
+    exercise_list = make_exercise_list(training_plan, image_list) # 「トレーニング指示リスト」作成
 
     # トレーニング開始
     st.session_state.started = False
     main_btn.empty() # ボタンを消す
     for exercise in exercise_list: # 「トレーニング指示リスト」に従い表示
-        text, count, sets, name = exercise
+        text, count, sets, name, image = exercise
         main_msg.markdown(
             tmpl_msg.substitute(text=text, count=count, sets=sets, name=name),
             unsafe_allow_html=True
         )
+        img_path = f"app/static/{image}"
+        if image:
+            img = Image.open(img_path)
+            main_img.image(img, caption=name, width=150)
+        else:
+            main_img.empty() # 画像を消す
+
         time.sleep(1)
