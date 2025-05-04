@@ -89,7 +89,7 @@ if st.session_state.started:
             tmpl_msg.substitute(text=text, count=count, sets=sets, name=name),
             unsafe_allow_html=True
         )
-        img_path = f"app/static/{image}"
+        img_path = f"static/{image}"
         if image:
             img = Image.open(img_path)
             main_img.image(img, caption=name, width=150)
