@@ -39,7 +39,7 @@ _tmpl_ex1 = string.Template("""
             "count": 0,
         },
         {
-            "text": "キープ！",
+            "text": "キープ！（右足上げ）",
             "time": ${keep_num},
             "count": -1,
         },
@@ -54,7 +54,7 @@ _tmpl_ex1 = string.Template("""
             "count": 0,
         },
         {
-            "text": "キープ！",
+            "text": "キープ！（左足上げ）",
             "time": ${keep_num},
             "count": -1,
         },
