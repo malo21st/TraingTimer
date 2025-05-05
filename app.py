@@ -1,8 +1,9 @@
 import streamlit as st
 import time
 import ast
-import ex_data
 from PIL import Image
+import functools
+import ex_data
 
 # Initialize & Setting
 ## Session State
@@ -34,6 +35,10 @@ def make_exercise_list(training_plan, image_list):
                         ex_lst.append([p["text"], "　", sets_num, name, image])
     ex_lst.append(["　", "　", "", "お疲れさまでした", ""])
     return ex_lst
+
+@functools.cache
+def chache_image(img_path):
+    return Image.open(img_path)
 
 # Streamlit
 ## Sidebar
@@ -89,10 +94,10 @@ if st.session_state.started:
             tmpl_msg.substitute(text=text, count=count, sets=sets, name=name),
             unsafe_allow_html=True
         )
-        img_path = f"static/{image}"
         if image:
-            img = Image.open(img_path)
-            main_img.image(img, width=150)
+            img_path = f"static/{image}" # static/{image}
+            img = chache_image(img_path) # 画像をキャッシュ
+            main_img.image(img, width=200)
         else:
             main_img.empty() # 画像を消す
 
