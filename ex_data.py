@@ -123,7 +123,7 @@ _ui_ex1 = {
 _ui_ex2 = {
     "name": "スクワット",
     "available": True,
-    "sets_def": 20,
+    "sets_def": 10,
     "sets_min": 5,
     "sets_max": 50,
     "sets_step": 5,
