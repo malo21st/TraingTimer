@@ -89,6 +89,11 @@ _tmpl_ex2 = string.Template("""
             "time": 3,
             "count": 0,
         },
+        {
+            "text": "ひざは伸ばさない",
+            "time": 1,
+            "count": 0,
+        },
     ],
 }
 """)
