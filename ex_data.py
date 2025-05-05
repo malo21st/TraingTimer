@@ -86,7 +86,7 @@ _tmpl_ex2 = string.Template("""
         },
         {
             "text": "ゆっくり上げて",
-            "time": 3,
+            "time": 2,
             "count": 0,
         },
         {
