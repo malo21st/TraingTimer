@@ -1,6 +1,7 @@
 import streamlit as st
 import time
 import ast
+from itertools import product
 from PIL import Image
 import functools
 import ex_data
@@ -23,17 +24,18 @@ def make_exercise_list(training_plan, image_list):
         name = training["name"]      
         for num in range(training["start_count"], -1, -1):
             ex_lst.append(["運動開始まで", num, 0, name, image])
-        for sets_num in range(1, training["sets"]+1):
-            for p in training["plan"]:
-                for count in range(p["time"]+1):
-                    if p["count"] == 1:
-                        ex_lst.append([p["text"], count, sets_num, name, image])
-                    elif p["count"] == -1:
-                        start_count = p["time"]
-                        ex_lst.append([p["text"], start_count - count, sets_num, name, image])
-                    else:
-                        ex_lst.append([p["text"], "　", sets_num, name, image])
-    ex_lst.append(["　", "　", "", "お疲れさまでした", ""])
+
+        for sets_num, plan in product(range(1, training["sets"] + 1), training["plan"]):
+            for count in range(plan["time"] + 1):
+                if plan["count"] == 1:
+                    ex_lst.append([plan["text"], count, sets_num, name, image])
+                elif plan["count"] == -1:
+                    start_count = plan["time"]
+                    ex_lst.append([plan["text"], start_count - count, sets_num, name, image])
+                else:
+                    ex_lst.append([plan["text"], "　", sets_num, name, image])
+    
+        ex_lst.append(["　", "　", "", "お疲れさまでした", ""])
     return ex_lst
 
 @functools.cache
@@ -95,7 +97,7 @@ if st.session_state.started:
             unsafe_allow_html=True
         )
         if image:
-            img_path = f"static/{image}" # static/{image}
+            img_path = f"training_partner/static/{image}" # static/{image}
             img = chache_image(img_path) # 画像をキャッシュ
             main_img.image(img, width=200)
         else:
