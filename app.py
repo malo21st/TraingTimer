@@ -97,7 +97,7 @@ if st.session_state.started:
             unsafe_allow_html=True
         )
         if image:
-            img_path = f"training_partner/static/{image}" # static/{image}
+            img_path = f"static/{image}" # static/{image}
             img = chache_image(img_path) # 画像をキャッシュ
             main_img.image(img, width=200)
         else:
