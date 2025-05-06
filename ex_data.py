@@ -128,6 +128,7 @@ _ui_ex1 = {
 
 _ui_ex2 = {
     "name": "スクワット",
+    "image": "02_squat_small.png",
     "available": True,
     "sets_def": 10,
     "sets_min": 5,
