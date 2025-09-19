@@ -93,7 +93,7 @@ if st.session_state.started:
     for exercise in exercise_list: # 「トレーニング指示リスト」に従い表示
         text, count, sets, name, image, sets_def = exercise
         main_msg.markdown(
-            tmpl_msg.substitute(text=text, count=count, sets=sets, name=name, sets_def),
+            tmpl_msg.substitute(text=text, count=count, sets=sets, name=name, sets_def=sets_def),
             unsafe_allow_html=True
         )
         if image:
