@@ -67,7 +67,9 @@ with st.sidebar:
 ### Layout
 main_msg = st.empty()
 main_btn = st.empty()
-main_img = st.empty()
+left_col, cent_col,last_col = st.columns(3)
+with cent_col: # Image centering
+    main_img = st.empty()
 
 ### Start
 main_msg.markdown("<h1 style='color: lightblue;'>運動しましょう</h1><br><br>",
