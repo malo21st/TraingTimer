@@ -1,3 +1,3 @@
 # TraingTimer
-室内で行える軽運動を補助してくれるタイマーアプリ
-- https://traingtimer.streamlit.app/ (Streamlit Community Cloud)
+室内で行える軽運動を補助してくれる運動支援アプリ
+- [https://traingtimer.streamlit.app/](https://training-assistant.streamlit.app/) (Streamlit Community Cloud)
