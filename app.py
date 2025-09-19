@@ -24,18 +24,18 @@ def make_exercise_list(training_plan, image_list):
         name = training["name"]      
         for num in range(training["start_count"], -1, -1):
             ex_lst.append(["運動開始まで", num, 0, name, image])
-
+        sets_def = training["sets"]
         for sets_num, plan in product(range(1, training["sets"] + 1), training["plan"]):
             for count in range(plan["time"] + 1):
                 if plan["count"] == 1:
-                    ex_lst.append([plan["text"], count, sets_num, name, image])
+                    ex_lst.append([plan["text"], count, sets_num, name, image, sets_def])
                 elif plan["count"] == -1:
                     start_count = plan["time"]
-                    ex_lst.append([plan["text"], start_count - count, sets_num, name, image])
+                    ex_lst.append([plan["text"], start_count - count, sets_num, name, image, sets_def])
                 else:
-                    ex_lst.append([plan["text"], "　", sets_num, name, image])
+                    ex_lst.append([plan["text"], "　", sets_num, name, image, sets_def])
     
-    ex_lst.append(["　", "　", "", "お疲れさまでした", ""])
+    ex_lst.append(["　", "　", "", "お疲れさまでした", "", ""])
     return ex_lst
 
 @functools.cache
@@ -91,9 +91,9 @@ if st.session_state.started:
     st.session_state.started = False
     main_btn.empty() # ボタンを消す
     for exercise in exercise_list: # 「トレーニング指示リスト」に従い表示
-        text, count, sets, name, image = exercise
+        text, count, sets, name, image, sets_def = exercise
         main_msg.markdown(
-            tmpl_msg.substitute(text=text, count=count, sets=sets, name=name),
+            tmpl_msg.substitute(text=text, count=count, sets=sets, name=name, sets_def),
             unsafe_allow_html=True
         )
         if image:
