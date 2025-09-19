@@ -149,9 +149,9 @@ ex_data_list = [
 
 # メイン画面　メッセージ
 tmpl_msg = string.Template("""
-<h1 style='color: red;'>${text}</h1>
 <div style='text-align: center;'>
+    <h1 style='color: red;'>${text}</h1>
     <span style='font-size: 72px; color: lightgreen;'>${count}</span>
+    <h1 style='color: lightblue;'>${name}　${sets} / ${sets_def}</h1>
 </div>
-<h1 style='color: lightblue;'>${name}　${sets} / ${sets_def}</h1>
 """)
