@@ -100,7 +100,6 @@ _tmpl_ex2 = string.Template("""
 
 _ui_ex0 = {
     "name": "かかと上げ下ろし",
-    "image": "00_tsumasaki_small.png",
     "available": True,
     "sets_def": 10,
     "sets_min": 5,
@@ -110,11 +109,11 @@ _ui_ex0 = {
     "keep_min": 5,
     "keep_max": 60,
     "keep_step": 5,
+    "image": "00_tsumasaki_small.png",
 }
 
 _ui_ex1 = {
     "name": "片足立ち",
-    "image": "01_kataashi_small.png",
     "available": True,
     "sets_def": 5,
     "sets_min": 5,
@@ -124,11 +123,11 @@ _ui_ex1 = {
     "keep_min": 30,
     "keep_max": 180,
     "keep_step": 30,
+    "image": "01_kataashi_small.png",
 }
 
 _ui_ex2 = {
     "name": "スクワット",
-    "image": "02_squat_small.png",
     "available": True,
     "sets_def": 10,
     "sets_min": 5,
@@ -138,6 +137,7 @@ _ui_ex2 = {
     "keep_min": 3,
     "keep_max": 15,
     "keep_step": 3,
+    "image": "02_squat_small.png",
 }
 
 # 運動データリスト
