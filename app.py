@@ -18,6 +18,7 @@ tmpl_msg = ex_data.tmpl_msg
 def make_exercise_list(training_plan, image_list):
     """
     「トレーニング計画」を元に「トレーニング指示リスト」を作成
+    ・１秒単位に指示リストを作成
     """
     ex_lst = []
     for training, image in zip(training_plan, image_list):
@@ -104,4 +105,4 @@ if st.session_state.started:
         else:
             main_img.empty() # 画像を消す
 
-        time.sleep(1)
+        time.sleep(1) # １秒毎に「トレーニング指示リスト」に従い表示
