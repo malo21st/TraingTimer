@@ -22,9 +22,10 @@ def make_exercise_list(training_plan, image_list):
     ex_lst = []
     for training, image in zip(training_plan, image_list):
         name = training["name"]      
-        for num in range(training["start_count"], -1, -1):
-            ex_lst.append(["運動開始まで", num, 0, name, image])
         sets_def = training["sets"]
+        for num in range(training["start_count"], -1, -1):
+            ex_lst.append(["運動開始まで", num, 0, name, image, sets_def])
+            
         for sets_num, plan in product(range(1, training["sets"] + 1), training["plan"]):
             for count in range(plan["time"] + 1):
                 if plan["count"] == 1:
