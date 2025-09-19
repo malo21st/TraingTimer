@@ -72,12 +72,11 @@ with cent_col: # Image centering
     main_img = st.empty()
 
 ### Start
-with cent_col: # centering
-    main_msg.markdown("<h1 style='color: lightblue;'>運動しましょう</h1><br><br>",
-                      unsafe_allow_html=True)
-    if main_btn.button("**はじめる**"):
-        st.session_state.started = True
-    main_img.empty() # 画像を消す
+main_msg.markdown("<h1 style='color: lightblue;'>運動しましょう</h1><br><br>",
+                  unsafe_allow_html=True)
+if main_btn.button("**はじめる**"):
+    st.session_state.started = True
+main_img.empty() # 画像を消す
 
 ### Operation
 if st.session_state.started:
