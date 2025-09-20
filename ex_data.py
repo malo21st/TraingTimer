@@ -152,6 +152,6 @@ tmpl_msg = string.Template("""
 <div style='text-align: center;'>
     <h1 style='color: red;'>${text}</h1>
     <span style='font-size: 72px; color: lightgreen;'>${count}</span>
-    <h1 style='color: lightblue;'>${name}　${sets} / ${sets_def}</h1>
+    <h1 style='color: lightblue;'>${name}　${sets}${sets_def}</h1>
 </div>
 """)
