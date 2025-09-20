@@ -1,5 +1,16 @@
 import string
 
+# マイメニュー
+## かかと上げ下ろし
+EX1_SETS = 10
+EX1_KEEP = 10
+## 片足立ち
+EX2_SETS = 5
+EX2_KEEP = 60
+## スクワット
+EX3_SETS = 10
+EX3_KEEP = 3
+
 # かかと上げ下ろし
 _tmpl_ex0 = string.Template("""
 {
@@ -101,11 +112,11 @@ _tmpl_ex2 = string.Template("""
 _ui_ex0 = {
     "name": "かかと上げ下ろし",
     "available": True,
-    "sets_def": 10,
+    "sets_def": EX1_SETS,
     "sets_min": 5,
     "sets_max": 50,
     "sets_step": 5,
-    "keep_def": 10,
+    "keep_def": EX1_KEEP,
     "keep_min": 5,
     "keep_max": 60,
     "keep_step": 5,
@@ -115,11 +126,11 @@ _ui_ex0 = {
 _ui_ex1 = {
     "name": "片足立ち",
     "available": True,
-    "sets_def": 5,
+    "sets_def": EX2_SETS,
     "sets_min": 5,
     "sets_max": 50,
     "sets_step": 5,
-    "keep_def": 60,
+    "keep_def": EX2_KEEP,
     "keep_min": 30,
     "keep_max": 180,
     "keep_step": 30,
@@ -129,11 +140,11 @@ _ui_ex1 = {
 _ui_ex2 = {
     "name": "スクワット",
     "available": True,
-    "sets_def": 10,
+    "sets_def": EX3_SETS,
     "sets_min": 5,
     "sets_max": 50,
     "sets_step": 5,
-    "keep_def": 3,
+    "keep_def": EX3_KEEP,
     "keep_min": 3,
     "keep_max": 15,
     "keep_step": 3,
