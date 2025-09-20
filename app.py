@@ -23,7 +23,7 @@ def make_exercise_list(training_plan, image_list):
     ex_lst = []
     for training, image in zip(training_plan, image_list):
         name = training["name"]      
-        sets_def = training["sets"]
+        sets_def = f' / {training["sets"]}'
         for num in range(training["start_count"], -1, -1):
             ex_lst.append(["運動開始まで", num, 0, name, image, sets_def])
             
