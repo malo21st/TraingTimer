@@ -37,7 +37,7 @@ def make_exercise_list(training_plan, image_list):
                 else:
                     ex_lst.append([plan["text"], "　", sets_num, name, image, sets_def])
     
-    ex_lst.append(["　", "お疲れさまでした", "", "", "", ""])
+    ex_lst.append(["　", "　", "", "お疲れさまでした", "", ""])
     return ex_lst
 
 @functools.cache
